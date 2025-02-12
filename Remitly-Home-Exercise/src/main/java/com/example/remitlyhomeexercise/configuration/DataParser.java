@@ -6,11 +6,13 @@ import com.example.remitlyhomeexercise.model.Country;
 import com.example.remitlyhomeexercise.repository.BankRepository;
 import com.example.remitlyhomeexercise.repository.CodeTypeRepository;
 import com.example.remitlyhomeexercise.repository.CountryRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -22,14 +24,17 @@ import java.util.Optional;
 @Configuration
 public class DataParser {
     @Bean
-    CommandLineRunner commandLineRunner(CountryRepository countryRepository, CodeTypeRepository codeTypeRepository, BankRepository bankRepository){
+    CommandLineRunner commandLineRunner(CountryRepository countryRepository, CodeTypeRepository codeTypeRepository, BankRepository bankRepository, @Value("${file.to.parse}") String fileName){
         return args -> {
             // This if is used because this data is supposed to be added just once as it is
             // just mock data
             if(countryRepository.count() == 0){
                 List<List<String>> records = new ArrayList<>();
                 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                InputStream is = classLoader.getResourceAsStream("SWIFT_CODES.tsv");
+                InputStream is = classLoader.getResourceAsStream(fileName);
+                if(is == null){
+                    throw new FileNotFoundException("The file file the name: " + fileName + " was not found");
+                }
                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
                 BufferedReader reader = new BufferedReader(isr);
                 for (String line; (line = reader.readLine()) != null;){
