@@ -13,4 +13,7 @@ public interface BankRepository extends JpaRepository<Bank, Long> {
     List<Bank> getBanksFromHeadquartersSwift(@Param("swift") String hqSwift);
 
     Optional<Bank> findBankBySwift(String swiftCode);
+
+    @Query("SELECT b FROM Bank b INNER JOIN Country c ON b.country = c WHERE c.iso2 = :iso2")
+    List<Bank> getAllBanksByCountryISO2Code(@Param("iso2") String iso2);
 }

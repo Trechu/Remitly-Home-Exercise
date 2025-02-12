@@ -16,17 +16,17 @@ public class Bank {
     @Column(length = 64)
     private String swift;
 
-    @ManyToOne(optional = false)
+    @ManyToOne()
     private CodeType codeType;
 
     @Column(length = 256)
     private String name;
 
     @Column(length = 256)
-    private String address;
+    private String address = "ND";
 
     @Column(length = 128)
-    private String townName;
+    private String townName = "ND";
 
     private boolean isHeadquarters;
 
