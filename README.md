@@ -24,7 +24,9 @@ All endpoints are accessible via `localhost:8080`.
 # Project structure and configuration
 
 The `main` folder contains the source files for the project as well as resources.
+<br>
 ***! IMPORTANT !***
+<br>
 The project was made with instructions that were given to us via email in mind, but they didn't specify everything, so there are a couple assumptions that I made:
 1. Firstly, I assumed that there is an already existing database of SWIFT codes and countries, as indicated by the spreadsheet provided with the instructions. As a result of that, the SWIFT addition endpoint works ***ONLY*** if you provide an `countryISO2` code that was included in the parsed data because it does not add a new ISO2 code into the database, since the field `TIME ZONE` is missing from the request, thus making the addition of a new ISO code problematic.
 2. Some of the tests also use the mock data that was provided with the instructions, so when starting tests ***IT IS HIGHLY ADVISED*** to use the same spreadsheet data. The file `SWIFT_CODES.tsv` should be included in the `resources` folder and is the one that contains all the data that the tests need to function (that being some pre existing SWIFT codes and country ISO2 codes)
