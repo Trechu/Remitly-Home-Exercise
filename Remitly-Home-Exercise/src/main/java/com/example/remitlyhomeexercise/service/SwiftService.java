@@ -1,8 +1,10 @@
 package com.example.remitlyhomeexercise.service;
 
 import com.example.remitlyhomeexercise.dto.ResponseBranchDto;
+import com.example.remitlyhomeexercise.dto.ResponseCountryDto;
 import com.example.remitlyhomeexercise.dto.ResponseHeadquartersDto;
 import com.example.remitlyhomeexercise.model.Bank;
+import com.example.remitlyhomeexercise.model.Country;
 import com.example.remitlyhomeexercise.repository.BankRepository;
 import com.example.remitlyhomeexercise.repository.CodeTypeRepository;
 import com.example.remitlyhomeexercise.repository.CountryRepository;
@@ -38,6 +40,19 @@ public class SwiftService {
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "A bank with this SWIFT code was not found")
         );
         return bankToResponseDto(bank);
+    }
+
+    public ResponseCountryDto getBanksByCountryISO2Code(String iso2){
+        Country country = countryRepository.getCountryByIso2(iso2).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "A country with this ISO2 code was not found")
+        );
+        List<Bank> banks = bankRepository.getAllBanksByCountryISO2Code(country.getIso2());
+        List<ResponseBranchDto> swiftCodes = banks.stream().map(this::bankToResponseDto).toList();
+        return countryToResponseCountryDto(country, swiftCodes);
+    }
+
+    private ResponseCountryDto countryToResponseCountryDto(Country country, List<ResponseBranchDto> swiftCodes){
+        return new ResponseCountryDto(country.getIso2(), country.getName(), swiftCodes);
     }
 
     private ResponseBranchDto bankToResponseDto(Bank bank){
