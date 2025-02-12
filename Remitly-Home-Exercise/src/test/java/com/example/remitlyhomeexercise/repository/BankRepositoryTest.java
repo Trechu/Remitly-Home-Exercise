@@ -1,6 +1,8 @@
 package com.example.remitlyhomeexercise.repository;
 
+import com.example.remitlyhomeexercise.dto.RequestBankDto;
 import com.example.remitlyhomeexercise.model.Bank;
+import com.example.remitlyhomeexercise.service.SwiftService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +16,15 @@ class BankRepositoryTest {
 
     @Autowired
     BankRepository bankRepository;
+
+    @Autowired
+    SwiftService swiftService;
+
+    @Test
+    void findBankBySWIFTCode(){
+        swiftService.createNewSwiftEntry(new RequestBankDto("TEST ADDRESS SUCCESS", "TEST NAME SUCCESS", "PL", "POLAND", true, "PLTEST02XXX"));
+        assertTrue("The method did not find the SWIFT code despite it being in the DB", bankRepository.findBankBySwift("PLTEST02XXX").isPresent());
+    }
 
     @Test
     void findAllBanksByHQCode(){

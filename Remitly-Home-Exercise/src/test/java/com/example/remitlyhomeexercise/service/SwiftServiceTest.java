@@ -5,6 +5,7 @@ import com.example.remitlyhomeexercise.repository.BankRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +19,25 @@ class SwiftServiceTest {
     BankRepository bankRepository;
 
     @Test
+    void hqDetailsExceptionThrowOnCodeNotFound(){
+        assertThrows(ResponseStatusException.class, () -> swiftService.getDetailsByHQSwiftCode("CODENOTHERE"));
+    }
+
+    @Test
+    void countryBankDetailsThrowOnCountryIsoNotFound(){
+        assertThrows(ResponseStatusException.class, () -> swiftService.getBanksByCountryISO2Code("QQ"));
+    }
+
+    @Test
+    void entryCreationThrowOnInvalidCountryInfoFormat(){
+        assertEquals(
+                "Entry addition failed due to incorrect countryISO2 code",
+                swiftService.createNewSwiftEntry(
+                        new RequestBankDto("TEST ADDRESS SUCCESS", "TEST NAME SUCCESS", "pL", "POLAND", true, "PLTESTPLXXX")
+                ).message());
+    }
+
+    @Test
     void createNewSwiftEntry() {
         swiftService.createNewSwiftEntry(new RequestBankDto("TEST ADDRESS SUCCESS", "TEST NAME SUCCESS", "PL", "POLAND", true, "PLTESTPLXXX"));
         swiftService.createNewSwiftEntry(new RequestBankDto("TEST ADDRESS FAILURE 1", "TEST NAME FAILURE 1", "RS", "ROSHAR", false, "ROSHARBRAND"));
@@ -29,9 +49,9 @@ class SwiftServiceTest {
 
     @Test
     void deleteSwiftEntry(){
-        swiftService.createNewSwiftEntry(new RequestBankDto("TEST ADDRESS SUCCESS", "TEST NAME SUCCESS", "PL", "POLAND", true, "PLTESTPLXXX"));
-        assertTrue(bankRepository.findBankBySwift("PLTESTPLXXX").isPresent());
-        swiftService.deleteSwiftEntry("PLTESTPLXXX");
-        assertTrue(bankRepository.findBankBySwift("PLTESTPLXXX").isEmpty());
+        swiftService.createNewSwiftEntry(new RequestBankDto("TEST ADDRESS SUCCESS", "TEST NAME SUCCESS", "PL", "POLAND", true, "PLTEST03XXX"));
+        assertTrue(bankRepository.findBankBySwift("PLTEST03XXX").isPresent());
+        swiftService.deleteSwiftEntry("PLTEST03XXX");
+        assertTrue(bankRepository.findBankBySwift("PLTEST03XXX").isEmpty());
     }
 }

@@ -86,15 +86,15 @@ public class SwiftService {
         }
     }
 
-    private ResponseCountryDto countryToResponseCountryDto(Country country, List<ResponseBranchDto> swiftCodes){
+    public ResponseCountryDto countryToResponseCountryDto(Country country, List<ResponseBranchDto> swiftCodes){
         return new ResponseCountryDto(country.getIso2(), country.getName(), swiftCodes);
     }
 
-    private ResponseBranchDto bankToResponseDto(Bank bank){
+    public ResponseBranchDto bankToResponseDto(Bank bank){
         return new ResponseBranchDto(bank.getAddress(), bank.getName(), bank.getCountry().getIso2(), bank.isHeadquarters(), bank.getSwift());
     }
 
-    private ResponseHeadquartersDto bankToResponseDto(Bank bank, List<ResponseBranchDto> branches){
+    public ResponseHeadquartersDto bankToResponseDto(Bank bank, List<ResponseBranchDto> branches){
         return new ResponseHeadquartersDto(bank.getAddress(), bank.getName(), bank.getCountry().getIso2(), bank.getCountry().getName(), bank.isHeadquarters(), bank.getSwift(), branches);
     }
 
