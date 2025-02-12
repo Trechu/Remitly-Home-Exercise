@@ -26,4 +26,12 @@ class SwiftServiceTest {
         assertTrue(bankRepository.findBankBySwift("ROSHARBRAND").isEmpty());
         assertTrue(bankRepository.findBankBySwift("SCADRIALXXX").isEmpty());
     }
+
+    @Test
+    void deleteSwiftEntry(){
+        swiftService.createNewSwiftEntry(new RequestBankDto("TEST ADDRESS SUCCESS", "TEST NAME SUCCESS", "PL", "POLAND", true, "PLTESTPLXXX"));
+        assertTrue(bankRepository.findBankBySwift("PLTESTPLXXX").isPresent());
+        swiftService.deleteSwiftEntry("PLTESTPLXXX");
+        assertTrue(bankRepository.findBankBySwift("PLTESTPLXXX").isEmpty());
+    }
 }

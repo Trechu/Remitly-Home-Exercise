@@ -1,7 +1,7 @@
 package com.example.remitlyhomeexercise.controller;
 
 import com.example.remitlyhomeexercise.dto.RequestBankDto;
-import com.example.remitlyhomeexercise.dto.ResponseBankCreationDto;
+import com.example.remitlyhomeexercise.dto.ResponseSwiftEntryDto;
 import com.example.remitlyhomeexercise.dto.ResponseCountryDto;
 import com.example.remitlyhomeexercise.exceptions.SwiftNotFoundException;
 import com.example.remitlyhomeexercise.service.SwiftService;
@@ -36,8 +36,13 @@ public class SwiftController {
     // Because it was not required of me in the instruction (and for the sake of my own sanity)
     // I will skip request authorization
     @PostMapping("")
-    public ResponseBankCreationDto createSWIFTEntry(@RequestBody RequestBankDto requestDto){
+    public ResponseSwiftEntryDto createSWIFTEntry(@RequestBody RequestBankDto requestDto){
         return swiftService.createNewSwiftEntry(requestDto);
+    }
+
+    @DeleteMapping("/{swift-code}")
+    public ResponseSwiftEntryDto deleteSWIFTEntry(@PathVariable("swift-code") String swiftCode){
+        return swiftService.deleteSwiftEntry(swiftCode);
     }
 
 }
